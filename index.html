@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#fbf5ec">
+  <meta name="description" content="Эспресс — домашняя выпечка, торты, круассаны и свежие салаты с доставкой. Готовим небольшими партиями каждое утро.">
+
+  <!-- Open Graph: аккуратный предпросмотр ссылки в соцсетях и мессенджерах -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Эспресс — домашняя выпечка и салаты с доставкой">
+  <meta property="og:description" content="Торты, круассаны, хлеб и свежие салаты. Готовим небольшими партиями и доставляем по Москве за 30–60 минут.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=1200&q=80&auto=format&fit=crop">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Эспресс — домашняя выпечка и свежие салаты с доставкой</title>
+
+  <!-- Шрифты: Manrope для интерфейса, Playfair Display для заголовков -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <!-- Верхняя информационная полоса -->
+  <div class="announcement">
+    <p>Бесплатная доставка от 2 500 ₽ · Готовим свежую партию каждое утро</p>
+  </div>
+
+  <!-- ШАПКА -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" width="26" height="26" fill="none">
+            <path d="M12 18.5h15.5v6.2A7.8 7.8 0 0 1 19.8 32.5h-.1a7.8 7.8 0 0 1-7.7-7.8v-6.2Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+            <path d="M27.5 20.5h2.3a4.1 4.1 0 0 1 0 8.2h-2.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M16.5 13.2c0-2 1.8-2.2 1.8-4.2M22.2 13.2c0-2 1.8-2.2 1.8-4.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <span class="brand-name">Эспресс</span>
+          <span class="brand-tagline">кондитерская · кулинария</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Основная навигация">
+        <a href="#menu">Меню</a>
+        <a href="#about">О нас</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Телефон: на мобильных остаётся только иконка, на широких экранах — номер -->
+        <a class="icon-btn phone-btn" href="tel:+79990000000" aria-label="Позвонить по телефону +7 999 000-00-00">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+            <path d="M6.7 3.5 9 8l-2 1.6a14 14 0 0 0 7.4 7.4l1.6-2 4.5 2.3-.6 2.1a2 2 0 0 1-2.2 1.4C10.6 19.6 4.4 13.4 3.2 6.3a2 2 0 0 1 1.4-2.2l2.1-.6Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+          </svg>
+          <span class="header-phone-text">+7 999 000-00-00</span>
+        </a>
+
+        <button class="cart-trigger" type="button" data-cart-open aria-label="Открыть корзину" aria-haspopup="dialog" aria-controls="cart-drawer" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="none" aria-hidden="true">
+            <path d="M5 8h14l-1 12H6L5 8Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+            <path d="M9 9V6.5a3 3 0 0 1 6 0V9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+          <span class="cart-badge" data-cart-count hidden>0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Свежая выпечка каждый день</p>
+
+          <h1>Домашняя выпечка и свежие салаты <span class="accent">с доставкой</span></h1>
+
+          <p class="hero-lead">
+            Печём по семейным рецептам, собираем салаты из свежих продуктов
+            и привозим к вашему столу. Без лишних слов — просто очень вкусно.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="#menu">
+              Смотреть меню
+              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a class="btn btn-secondary btn-lg" href="tel:+79990000000">Позвонить</a>
+          </div>
+
+          <div class="hero-trust" aria-label="Преимущества">
+            <div class="trust-item">
+              <span class="trust-stars" aria-hidden="true">★★★★★</span>
+              <span><strong>4,9</strong> из 5 · 200+ отзывов</span>
+            </div>
+            <div class="trust-item">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>Доставка 30–60 минут</span>
+            </div>
+            <div class="trust-item">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+                <path d="m5 12 4.5 4.5L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Только натуральные продукты</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-image-main">
+            <img
+              src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=1000&q=80&auto=format&fit=crop"
+              alt="Домашний торт с ягодами"
+              width="1000" height="1100"
+              fetchpriority="high"
+            >
+          </div>
+
+          <div class="hero-image-small" aria-hidden="true">
+            <img
+              src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80&auto=format&fit=crop"
+              alt=""
+              width="500" height="500"
+              loading="eager"
+            >
+          </div>
+
+          <div class="hero-note">
+            <span class="hero-note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+            </span>
+            <span>
+              <strong>Свежая партия</strong>
+              <small>каждое утро с 7:00</small>
+            </span>
+          </div>
+
+          <div class="hero-sticker" aria-hidden="true">
+            <span>с 7:00<br>до 21:00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПРЕИМУЩЕСТВА -->
+    <section class="usp-strip" aria-label="Почему выбирают Эспресс">
+      <div class="container usp-grid">
+        <div class="usp-item">
+          <span class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+              <path d="M5 10.5h12.5v5a5 5 0 0 1-5 5h-2.5a5 5 0 0 1-5-5v-5Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M17.5 12h1.6a3 3 0 0 1 0 6h-1.8M8.5 7c0-1.5 1.2-1.8 1.2-3M12.5 7c0-1.5 1.2-1.8 1.2-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span><strong>Печём сами</strong><small>небольшими партиями</small></span>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+              <path d="M3.5 7.5h11v9h-11v-9ZM14.5 10h3.2l2.8 3v3.5h-6V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <circle cx="7" cy="18" r="1.8" stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="17.5" cy="18" r="1.8" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </span>
+          <span><strong>Быстрая доставка</strong><small>30–60 минут по городу</small></span>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+              <path d="M12 21s7-4.3 7-11a7 7 0 1 0-14 0c0 6.7 7 11 7 11Z" stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </span>
+          <span><strong>Свежие продукты</strong><small>без консервантов</small></span>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+              <rect x="3" y="6" width="18" height="12" rx="2.5" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M3 10h18M7 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span><strong>Удобная оплата</strong><small>наличными или переводом</small></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- КАТАЛОГ -->
+    <section class="menu-section" id="menu">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Наше меню</p>
+            <h2>Выберите, что хочется сегодня</h2>
+          </div>
+          <p class="section-desc">
+            Всё готовим небольшими партиями каждое утро. Состав, вес и цена
+            указаны на карточке — остальное сделаем мы.
+          </p>
+        </div>
+
+        <!-- Вкладки категорий. Кнопки создаются в script.js для удобного управления состоянием -->
+        <div class="menu-tabs" role="tablist" aria-label="Категории меню" data-tabs></div>
+
+        <div class="products-grid" id="products-panel" role="tabpanel" aria-live="polite" data-products-grid></div>
+
+        <p class="menu-note">
+          Не нашли нужное? Позвоните нам:
+          <a href="tel:+79990000000">+7 999 000-00-00</a> — соберём индивидуальный заказ.
+        </p>
+      </div>
+    </section>
+
+    <!-- О НАС -->
+    <section class="about-section" id="about">
+      <div class="container">
+        <div class="about-panel">
+          <div class="about-media">
+            <img
+              src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1000&q=80&auto=format&fit=crop"
+              alt="Домашний хлеб на закваске"
+              width="1000" height="900"
+              loading="lazy"
+            >
+          </div>
+
+          <div class="about-content">
+            <p class="eyebrow eyebrow-light"><span class="eyebrow-dot" aria-hidden="true"></span> Маленькая семейная кондитерская</p>
+            <h2>Готовим так, как готовили бы для себя</h2>
+            <p>
+              «Эспресс» — это домашняя кухня без сложных слов. Мы сами замешиваем тесто,
+              выбираем продукты и собираем каждый салат перед отправкой. Никаких заморозок
+              и долгого хранения — только свежая еда, которую приятно поставить на стол.
+            </p>
+
+            <div class="about-stats" aria-label="Цифры о нас">
+              <div class="stat"><strong>7 лет</strong><span>радуем гостей</span></div>
+              <div class="stat"><strong>40+</strong><span>позиций в меню</span></div>
+              <div class="stat"><strong>4,9</strong><span>средняя оценка</span></div>
+            </div>
+
+            <a class="btn btn-light" href="#menu">Перейти к меню</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- КОНТАКТЫ И ПОДВАЛ -->
+  <footer class="site-footer" id="contacts">
+    <div class="container">
+      <div class="footer-cta">
+        <div>
+          <p class="eyebrow eyebrow-light"><span class="eyebrow-dot" aria-hidden="true"></span> Свежее уже готово</p>
+          <h2>Закажите к завтраку, обеду или ужину</h2>
+          <p>Привезём по Москве за 30–60 минут. Бесплатно при заказе от 2 500 ₽.</p>
+        </div>
+        <div class="footer-actions">
+          <a class="btn btn-light" href="#menu">Открыть меню</a>
+          <a class="btn btn-ghost-light" href="tel:+79990000000">+7 999 000-00-00</a>
+        </div>
+      </div>
+
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand brand-light" href="#top">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 44 44" width="26" height="26" fill="none">
+                <path d="M12 18.5h15.5v6.2A7.8 7.8 0 0 1 19.8 32.5h-.1a7.8 7.8 0 0 1-7.7-7.8v-6.2Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+                <path d="M27.5 20.5h2.3a4.1 4.1 0 0 1 0 8.2h-2.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M16.5 13.2c0-2 1.8-2.2 1.8-4.2M22.2 13.2c0-2 1.8-2.2 1.8-4.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="brand-copy">
+              <span class="brand-name">Эспресс</span>
+              <span class="brand-tagline">кондитерская · кулинария</span>
+            </span>
+          </a>
+          <p class="footer-description">Домашняя выпечка, торты и свежие салаты с доставкой по Москве.</p>
+
+          <div class="socials" aria-label="Мы в соцсетях">
+            <a class="social-link" href="https://t.me/espress_owner" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+                <path d="m21 4.5-3.2 15-5.1-4-2.7 2.7.4-4.4L18 6.7 8.9 13 4 11.4 21 4.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a class="social-link" href="https://wa.me/79990000000" target="_blank" rel="noopener noreferrer" aria-label="Написать в WhatsApp">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+                <path d="M20 11.7a8 8 0 0 1-11.8 7L4 20l1.3-4.1A8 8 0 1 1 20 11.7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M9.2 8.6c.4-.1.7 0 .9.4l.7 1.4c.1.3.1.5-.1.8l-.5.6c.6 1.2 1.5 2 2.7 2.5l.6-.6c.2-.2.5-.3.8-.1l1.4.7c.3.2.5.5.4.9-.2.8-.9 1.4-1.8 1.4-3.1 0-5.8-2.7-5.8-5.8 0-.9.6-1.7 1.4-1.8Z" fill="currentColor"/>
+              </svg>
+            </a>
+            <a class="social-link" href="https://vk.com/espress_owner" target="_blank" rel="noopener noreferrer" aria-label="Мы во ВКонтакте">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+                <path d="M4 8.5c.7 4.6 3.3 7.5 7.6 7.5h1.3v-3c1.7.2 3 1.4 3.6 3h2.8c-.7-2.6-2.2-4.2-3.7-5 1.3-1 2.5-2.4 3-4.5h-2.8c-.5 1.7-1.7 3.1-3 3.4V6.5h-1.2c-3.7 0-6.6 2.2-7.6 6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Контакты</h3>
+          <address>
+            <a href="https://yandex.ru/maps/?text=Москва, Пятницкая 17" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" aria-hidden="true">
+                <path d="M12 21s7-4.3 7-11a7 7 0 1 0-14 0c0 6.7 7 11 7 11Z" stroke="currentColor" stroke-width="1.7"/>
+                <circle cx="12" cy="10" r="2.3" stroke="currentColor" stroke-width="1.7"/>
+              </svg>
+              Москва, ул. Пятницкая, 17
+            </a>
+            <a href="tel:+79990000000">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" aria-hidden="true">
+                <path d="M6.7 3.5 9 8l-2 1.6a14 14 0 0 0 7.4 7.4l1.6-2 4.5 2.3-.6 2.1a2 2 0 0 1-2.2 1.4C10.6 19.6 4.4 13.4 3.2 6.3a2 2 0 0 1 1.4-2.2l2.1-.6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              </svg>
+              +7 999 000-00-00
+            </a>
+            <a href="mailto:hello@espress.ru">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" aria-hidden="true">
+                <rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.7"/>
+                <path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              </svg>
+              hello@espress.ru
+            </a>
+          </address>
+        </div>
+
+        <div class="footer-col">
+          <h3>Режим работы</h3>
+          <p>Ежедневно<br><strong>08:00–21:00</strong></p>
+          <p class="footer-small">Приём заказов — до 20:30.<br>Самовывоз — по адресу выше.</p>
+        </div>
+
+        <div class="footer-col">
+          <h3>Навигация</h3>
+          <nav class="footer-nav" aria-label="Навигация в подвале">
+            <a href="#menu">Меню</a>
+            <a href="#about">О нас</a>
+            <a href="#contacts">Контакты</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© <span data-current-year>2026</span> «Эспресс». Все права защищены.</p>
+        <p>Доставка по Москве · Оплата наличными или переводом</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- КОРЗИНА / ПАНЕЛЬ ОФОРМЛЕНИЯ -->
+  <div class="cart-overlay" data-cart-close aria-hidden="true"></div>
+
+  <aside
+    class="cart-drawer"
+    id="cart-drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cart-title"
+    aria-hidden="true"
+    inert
+  >
+    <div class="cart-handle" aria-hidden="true"></div>
+
+    <header class="cart-header">
+      <div>
+        <p class="cart-kicker">Ваш заказ</p>
+        <h2 class="cart-title" id="cart-title">Корзина <span class="cart-title-count" data-cart-count-text></span></h2>
+      </div>
+      <button class="icon-btn cart-close" type="button" data-cart-close aria-label="Закрыть корзину">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+          <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </header>
+
+    <div class="cart-scroll">
+      <!-- Пустая корзина -->
+      <div class="cart-empty" data-cart-empty>
+        <span class="cart-empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="36" height="36" fill="none">
+            <path d="M5 8h14l-1 12H6L5 8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M9 9V6.5a3 3 0 0 1 6 0V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M9.5 13.5c.8.8 1.6 1.2 2.5 1.2s1.7-.4 2.5-1.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h3>Пока пусто</h3>
+        <p>Добавьте что-нибудь вкусное из меню — и заказ появится здесь.</p>
+        <a class="btn btn-primary" href="#menu" data-cart-close>Смотреть меню</a>
+      </div>
+
+      <!-- Содержимое корзины -->
+      <div class="cart-content" data-cart-content hidden>
+        <div class="delivery-progress">
+          <div class="delivery-progress-head">
+            <span data-delivery-text>До бесплатной доставки</span>
+            <strong data-delivery-percent>0%</strong>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Прогресс до бесплатной доставки" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-progress-bar>
+            <span class="progress-fill" data-progress-fill></span>
+          </div>
+        </div>
+
+        <ul class="cart-items" data-cart-items aria-label="Товары в корзине"></ul>
+
+        <form class="checkout-form" id="checkout-form" novalidate>
+          <h3>Данные для доставки</h3>
+
+          <div class="form-grid">
+            <div class="form-field" data-field="name">
+              <label for="order-name">Имя</label>
+              <input id="order-name" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" required>
+              <span class="field-error" data-error-for="name"></span>
+            </div>
+
+            <div class="form-field" data-field="phone">
+              <label for="order-phone">Телефон</label>
+              <input id="order-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 999 000-00-00" required>
+              <span class="field-error" data-error-for="phone"></span>
+            </div>
+
+            <div class="form-field" data-field="address">
+              <label for="order-address">Адрес доставки</label>
+              <textarea id="order-address" name="address" rows="2" autocomplete="street-address" placeholder="Улица, дом, квартира, подъезд" required></textarea>
+              <span class="field-error" data-error-for="address"></span>
+            </div>
+
+            <fieldset class="payment-group">
+              <legend>Способ оплаты</legend>
+              <div class="payment-options">
+                <label class="payment-option">
+                  <input type="radio" name="payment" value="Наличными при получении" checked>
+                  <span class="radio-mark" aria-hidden="true"></span>
+                  <span>Наличными</span>
+                </label>
+                <label class="payment-option">
+                  <input type="radio" name="payment" value="Переводом на карту">
+                  <span class="radio-mark" aria-hidden="true"></span>
+                  <span>Переводом</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="order-summary" aria-label="Итог заказа">
+            <div class="summary-row"><span>Товары</span><span data-summary-subtotal>0 ₽</span></div>
+            <div class="summary-row"><span>Доставка</span><span data-summary-delivery>0 ₽</span></div>
+            <div class="summary-row total"><span>Итого</span><span data-summary-total>0 ₽</span></div>
+          </div>
+
+          <button class="btn btn-primary btn-checkout" type="submit">
+            Оформить заказ
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <button class="telegram-submit" type="button" data-telegram-submit>
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" aria-hidden="true">
+              <path d="m21 4.5-3.2 15-5.1-4-2.7 2.7.4-4.4L18 6.7 8.9 13 4 11.4 21 4.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            </svg>
+            Отправить заказ в Telegram
+          </button>
+
+          <p class="checkout-note">
+            После нажатия откроется WhatsApp с готовым текстом заказа.
+            Осталось только отправить сообщение — мы подтвердим заказ в ответном чате.
+          </p>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Всплывающее уведомление -->
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
