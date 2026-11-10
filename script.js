@@ -60,7 +60,7 @@
       weight: "1,2 кг",
       price: 2490,
       badge: "Хит",
-      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=900&q=80&auto=format&fit=crop",
+      image: "images/chocolate-cake.webp",
       alt: "Шоколадный торт с карамелью"
     },
     {
@@ -71,7 +71,7 @@
       weight: "900 г",
       price: 1890,
       badge: "",
-      image: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=900&q=80&auto=format&fit=crop",
+      image: "images/cheesecake.webp",
       alt: "Чизкейк «Нью-Йорк» с ягодами"
     },
     {
@@ -82,7 +82,7 @@
       weight: "220 г",
       price: 390,
       badge: "Новинка",
-      image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=900&q=80&auto=format&fit=crop",
+      image: "images/tiramisu.webp",
       alt: "Тирамису в стакане"
     },
     {
@@ -93,7 +93,7 @@
       weight: "140 г",
       price: 290,
       badge: "",
-      image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=900&q=80&auto=format&fit=crop",
+      image: "images/pavlova.webp",
       alt: "Пирожное «Павлова» с ягодами"
     },
     {
@@ -104,7 +104,7 @@
       weight: "120 г",
       price: 220,
       badge: "Хит",
-      image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=900&q=80&auto=format&fit=crop",
+      image: "images/croissant.webp",
       alt: "Свежие круассаны с миндалём"
     },
     {
@@ -115,7 +115,7 @@
       weight: "180 г",
       price: 390,
       badge: "",
-      image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=900&q=80&auto=format&fit=crop",
+      image: "images/salmon-croissant.webp",
       alt: "Круассан-сэндвич с лососем"
     },
     {
@@ -126,7 +126,7 @@
       weight: "700 г",
       price: 320,
       badge: "",
-      image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=900&q=80&auto=format&fit=crop",
+      image: "images/sourdough.webp",
       alt: "Домашний хлеб на закваске"
     },
     {
@@ -137,7 +137,7 @@
       weight: "160 г",
       price: 260,
       badge: "Новинка",
-      image: "https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=900&q=80&auto=format&fit=crop",
+      image: "images/cinnamon-bun.webp",
       alt: "Булочка синнабон с корицей"
     },
 
@@ -154,7 +154,7 @@
       weightStep: 50,
       defaultWeight: 250,
       badge: "",
-      image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=900&q=80&auto=format&fit=crop",
+      image: "images/greek-salad.webp",
       alt: "Салат «Греческий» с фетой"
     },
     {
@@ -169,7 +169,7 @@
       weightStep: 50,
       defaultWeight: 250,
       badge: "Хит",
-      image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&q=80&auto=format&fit=crop",
+      image: "images/quinoa-salad.webp",
       alt: "Салат с киноа и авокадо"
     },
     {
@@ -184,7 +184,7 @@
       weightStep: 50,
       defaultWeight: 250,
       badge: "",
-      image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=900&q=80&auto=format&fit=crop",
+      image: "images/caesar-salad.webp",
       alt: "Салат «Цезарь» с курицей"
     },
     {
@@ -199,7 +199,7 @@
       weightStep: 50,
       defaultWeight: 200,
       badge: "",
-      image: "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=900&q=80&auto=format&fit=crop",
+      image: "images/bruschetta.webp",
       alt: "Брускетты с томатами и базиликом"
     }
   ];
