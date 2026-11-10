@@ -3,20 +3,47 @@
 
   /* =========================================================
      НАСТРОЙКИ МАГАЗИНА
-     Замените телефон и username на реальные данные владельца.
-     Телефон WhatsApp — только цифры, без + и пробелов.
+     Меняйте только значения справа от двоеточий.
      ========================================================= */
   const CONFIG = {
-    whatsappPhone: "79990000000",       // ← например: 79001234567
-    telegramUsername: "espress_owner",  // ← например: espresso_shop
+    // Телефон магазина
+    phone: "+79965822164",
+    phoneDisplay: "+7 996 582-21-64",
+
+    // Мессенджеры. MAX открывается первым — он указан основным каналом.
+    maxLink: "https://max.ru/u/espress_shop",   // ← ссылка на профиль/бота в MAX
+    whatsappPhone: "79965822164",               // ← только цифры, без + и пробелов
+    telegramUsername: "espress_owner",          // ← ник в Telegram без @
+
+    /* QR-код для оплаты.
+       Вариант 1: положите картинку с QR от банка рядом с index.html
+                  и впишите её имя в paymentQrImage, например "qr-sbp.png".
+       Вариант 2: впишите ссылку СБП в paymentQrData — QR нарисуется сам.
+       В paymentQrData можно использовать {amount} — подставится сумма заказа.
+       Когда поставите настоящий QR, переключите paymentQrDemo на false. */
+    paymentQrImage: "",
+    paymentQrData: "",
+    paymentQrDemo: true,
+
+    // Доставка
     deliveryPrice: 290,
     freeDeliveryFrom: 2500,
-    storageKey: "espress-cart-v1"
+
+    // Ключ корзины в localStorage (v2 — новый формат с весом)
+    storageKey: "espress-cart-v2"
+  };
+
+  /* Подписи способов оплаты для текста заказа */
+  const PAYMENT_LABELS = {
+    cash: "Наличными при получении",
+    transfer: "Переводом на карту",
+    qr: "QR-код (СБП)"
   };
 
   /* =========================================================
      ДАННЫЕ КАТАЛОГА
-     Чтобы добавить товар, скопируйте объект и укажите новый id.
+     Обычный товар: weight + price.
+     Весовой товар: unit: "weight" + pricePer100g (цена за 100 г).
      ========================================================= */
   const categories = [
     { id: "cakes", label: "Торты и пирожные" },
@@ -113,13 +140,19 @@
       image: "https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=900&q=80&auto=format&fit=crop",
       alt: "Булочка синнабон с корицей"
     },
+
+    /* --- Салаты и закуски: всё продаётся на вес --- */
     {
       id: "greek-salad",
       category: "salads",
       name: "Салат «Греческий»",
       description: "Хрустящие овощи, фета, маслины и оливковое масло с орегано.",
-      weight: "280 г",
-      price: 390,
+      unit: "weight",
+      pricePer100g: 140,
+      minWeight: 100,
+      maxWeight: 2000,
+      weightStep: 50,
+      defaultWeight: 250,
       badge: "",
       image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=900&q=80&auto=format&fit=crop",
       alt: "Салат «Греческий» с фетой"
@@ -129,8 +162,12 @@
       category: "salads",
       name: "Салат с киноа и авокадо",
       description: "Киноа, авокадо, томаты черри, зелень и лёгкая лимонная заправка.",
-      weight: "320 г",
-      price: 450,
+      unit: "weight",
+      pricePer100g: 150,
+      minWeight: 100,
+      maxWeight: 2000,
+      weightStep: 50,
+      defaultWeight: 250,
       badge: "Хит",
       image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&q=80&auto=format&fit=crop",
       alt: "Салат с киноа и авокадо"
@@ -140,8 +177,12 @@
       category: "salads",
       name: "Цезарь с курицей",
       description: "Романо, куриное филе, пармезан, сухарики и домашний соус цезарь.",
-      weight: "300 г",
-      price: 420,
+      unit: "weight",
+      pricePer100g: 145,
+      minWeight: 100,
+      maxWeight: 2000,
+      weightStep: 50,
+      defaultWeight: 250,
       badge: "",
       image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=900&q=80&auto=format&fit=crop",
       alt: "Салат «Цезарь» с курицей"
@@ -151,8 +192,12 @@
       category: "salads",
       name: "Брускетты с томатами",
       description: "Поджаренный хлеб, томаты, базилик, чеснок и оливковое масло.",
-      weight: "240 г",
-      price: 350,
+      unit: "weight",
+      pricePer100g: 130,
+      minWeight: 100,
+      maxWeight: 2000,
+      weightStep: 50,
+      defaultWeight: 200,
       badge: "",
       image: "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=900&q=80&auto=format&fit=crop",
       alt: "Брускетты с томатами и базиликом"
@@ -186,7 +231,10 @@
     summaryDelivery: document.querySelector("[data-summary-delivery]"),
     summaryTotal: document.querySelector("[data-summary-total]"),
     checkoutForm: document.querySelector("#checkout-form"),
-    telegramSubmit: document.querySelector("[data-telegram-submit]"),
+    qrPanel: document.querySelector("[data-qr-panel]"),
+    qrCode: document.querySelector("[data-qr-code]"),
+    qrAmount: document.querySelector("[data-qr-amount]"),
+    qrHint: document.querySelector("[data-qr-hint]"),
     toast: document.querySelector("[data-toast]")
   };
 
@@ -202,12 +250,17 @@
   let toastTimer = null;
   let cartCloseTimer = null;
   let lastFocusedElement = null;
+  let qrCache = { key: "", node: null };
 
   /* =========================================================
      ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
      ========================================================= */
   function formatPrice(value) {
     return `${priceFormatter.format(value)} ₽`;
+  }
+
+  function formatGrams(value) {
+    return `${priceFormatter.format(value)} г`;
   }
 
   function pluralize(count, one, few, many) {
@@ -224,6 +277,36 @@
     return pluralize(count, "товар", "товара", "товаров");
   }
 
+  /* Цена одной порции: у весового товара зависит от граммовки */
+  function itemUnitPrice(product, grams) {
+    if (product.unit === "weight") {
+      return Math.round((product.pricePer100g * grams) / 100);
+    }
+    return product.price;
+  }
+
+  /* Ключ корзины: обычный товар — id, весовой — id@граммы */
+  function cartKeyFor(product, grams) {
+    return product.unit === "weight" ? `${product.id}@${grams}` : product.id;
+  }
+
+  function parseCartKey(key) {
+    const [id, gramsRaw] = String(key).split("@");
+    const product = productById.get(id);
+
+    if (!product) return null;
+
+    if (product.unit === "weight") {
+      const grams = Math.round(Number(gramsRaw));
+
+      if (!Number.isFinite(grams) || grams < 50 || grams > 5000) return null;
+
+      return { key, product, grams };
+    }
+
+    return { key, product, grams: 0 };
+  }
+
   function loadCart() {
     try {
       const saved = JSON.parse(localStorage.getItem(CONFIG.storageKey) || "{}");
@@ -232,11 +315,11 @@
         return {};
       }
 
-      return Object.entries(saved).reduce((cart, [id, quantity]) => {
+      return Object.entries(saved).reduce((cart, [key, quantity]) => {
         const qty = Number(quantity);
 
-        if (productById.has(id) && Number.isInteger(qty) && qty > 0) {
-          cart[id] = Math.min(qty, 99);
+        if (parseCartKey(key) && Number.isInteger(qty) && qty > 0) {
+          cart[key] = Math.min(qty, 99);
         }
 
         return cart;
@@ -256,15 +339,18 @@
 
   function getCartItems() {
     return Object.entries(state.cart)
-      .map(([id, quantity]) => {
-        const product = productById.get(id);
+      .map(([key, quantity]) => {
+        const entry = parseCartKey(key);
 
-        if (!product) return null;
+        if (!entry) return null;
+
+        const unitPrice = itemUnitPrice(entry.product, entry.grams);
 
         return {
-          product,
+          ...entry,
           quantity,
-          lineTotal: product.price * quantity
+          unitPrice,
+          lineTotal: unitPrice * quantity
         };
       })
       .filter(Boolean);
@@ -306,7 +392,7 @@
      ========================================================= */
   function renderTabs() {
     els.tabs.innerHTML = categories
-      .map((category, index) => {
+      .map((category) => {
         const isActive = category.id === state.activeCategory;
 
         return `
@@ -327,6 +413,53 @@
     els.grid.setAttribute("aria-labelledby", `tab-${state.activeCategory}`);
   }
 
+  /* Разметка блока выбора веса для весового товара */
+  function weightBlockTemplate(product) {
+    return `
+      <div class="weight-row">
+        <div class="weight-stepper">
+          <button
+            class="weight-btn"
+            type="button"
+            data-weight-step="-1"
+            data-id="${product.id}"
+            aria-label="Уменьшить вес «${product.name}»"
+          >−</button>
+
+          <input
+            class="weight-input"
+            type="number"
+            inputmode="numeric"
+            data-weight-input="${product.id}"
+            value="${product.defaultWeight}"
+            min="${product.minWeight}"
+            max="${product.maxWeight}"
+            step="${product.weightStep}"
+            aria-label="Вес «${product.name}» в граммах"
+          >
+
+          <span class="weight-unit" aria-hidden="true">г</span>
+
+          <button
+            class="weight-btn"
+            type="button"
+            data-weight-step="1"
+            data-id="${product.id}"
+            aria-label="Увеличить вес «${product.name}»"
+          >+</button>
+        </div>
+
+        <span class="weight-total" data-weight-total="${product.id}">
+          ${formatPrice(itemUnitPrice(product, product.defaultWeight))}
+        </span>
+      </div>
+
+      <p class="weight-hint">
+        Цена за 100 г · от ${product.minWeight} г, шаг ${product.weightStep} г
+      </p>
+    `;
+  }
+
   function renderProducts(categoryId) {
     const category = categoryById.get(categoryId);
 
@@ -334,12 +467,26 @@
 
     const categoryProducts = products.filter((product) => product.category === categoryId);
 
+    const hint = categoryId === "salads"
+      ? `<p class="menu-hint">Салаты и закуски продаём на вес: укажите граммовку в карточке — стоимость пересчитается автоматически.</p>`
+      : "";
+
     els.grid.setAttribute("aria-labelledby", `tab-${categoryId}`);
-    els.grid.innerHTML = categoryProducts
+    els.grid.innerHTML = hint + categoryProducts
       .map((product, index) => {
+        const isWeight = product.unit === "weight";
+
         const badge = product.badge
           ? `<span class="product-badge">${product.badge}</span>`
           : "";
+
+        const priceHtml = isWeight
+          ? `${formatPrice(product.pricePer100g)}<small>за 100 г</small>`
+          : formatPrice(product.price);
+
+        const metaHtml = isWeight
+          ? `<span class="product-weight">на вес</span>`
+          : `<span class="product-weight">${product.weight}</span>`;
 
         return `
           <article class="product-card" style="--i: ${index}">
@@ -361,12 +508,14 @@
               <p class="product-desc">${product.description}</p>
 
               <div class="product-meta">
-                <span class="product-weight">${product.weight}</span>
+                ${metaHtml}
                 <span class="product-fresh">готовим сегодня</span>
               </div>
 
+              ${isWeight ? weightBlockTemplate(product) : ""}
+
               <div class="product-footer">
-                <span class="product-price">${formatPrice(product.price)}</span>
+                <span class="product-price">${priceHtml}</span>
                 <button
                   class="add-btn"
                   type="button"
@@ -407,19 +556,67 @@
   }
 
   /* =========================================================
+     ВЕСОВОЙ ТОВАР
+     ========================================================= */
+  function readWeight(input) {
+    const raw = Number(String(input.value).replace(",", "."));
+
+    if (!Number.isFinite(raw) || raw <= 0) return null;
+
+    return Math.round(raw);
+  }
+
+  function clampWeight(grams, product) {
+    return Math.min(product.maxWeight, Math.max(product.minWeight, grams));
+  }
+
+  function updateWeightTotal(productId) {
+    const product = productById.get(productId);
+    const input = els.grid.querySelector(`[data-weight-input="${productId}"]`);
+    const total = els.grid.querySelector(`[data-weight-total="${productId}"]`);
+
+    if (!product || !input || !total) return;
+
+    const grams = readWeight(input);
+
+    total.textContent = grams
+      ? formatPrice(itemUnitPrice(product, clampWeight(grams, product)))
+      : "—";
+  }
+
+  function stepWeight(productId, direction) {
+    const product = productById.get(productId);
+    const input = els.grid.querySelector(`[data-weight-input="${productId}"]`);
+
+    if (!product || !input) return;
+
+    const current = readWeight(input) || product.defaultWeight;
+    const next = clampWeight(current + direction * product.weightStep, product);
+
+    input.value = String(next);
+    updateWeightTotal(productId);
+  }
+
+  /* =========================================================
      КОРЗИНА
      ========================================================= */
-  function addToCart(productId, button) {
+  function addToCart(productId, grams, button) {
     const product = productById.get(productId);
     if (!product) return;
 
-    const currentQuantity = state.cart[productId] || 0;
-    state.cart[productId] = Math.min(currentQuantity + 1, 99);
+    const key = cartKeyFor(product, grams);
+
+    state.cart[key] = Math.min((state.cart[key] || 0) + 1, 99);
 
     saveCart();
     renderCart();
     animateBadge();
-    showToast(`«${product.name}» добавлен в корзину`);
+
+    showToast(
+      product.unit === "weight"
+        ? `«${product.name}» · ${formatGrams(grams)} в корзине`
+        : `«${product.name}» добавлен в корзину`
+    );
 
     if (button) {
       const label = button.querySelector("span");
@@ -437,14 +634,14 @@
     }
   }
 
-  function changeQuantity(productId, delta) {
-    const currentQuantity = state.cart[productId] || 0;
+  function changeQuantity(key, delta) {
+    const currentQuantity = state.cart[key] || 0;
     const nextQuantity = currentQuantity + delta;
 
     if (nextQuantity <= 0) {
-      delete state.cart[productId];
+      delete state.cart[key];
     } else {
-      state.cart[productId] = Math.min(nextQuantity, 99);
+      state.cart[key] = Math.min(nextQuantity, 99);
     }
 
     saveCart();
@@ -452,20 +649,34 @@
 
     if (nextQuantity > 0) {
       const nextButton = els.cartItems.querySelector(
-        `[data-action="${delta > 0 ? "increase" : "decrease"}"][data-id="${productId}"]`
+        `[data-action="${delta > 0 ? "increase" : "decrease"}"][data-key="${key}"]`
       );
       if (nextButton) nextButton.focus({ preventScroll: true });
     }
   }
 
-  function removeFromCart(productId) {
-    const product = productById.get(productId);
-    if (!product) return;
+  function removeFromCart(key) {
+    const entry = parseCartKey(key);
+    if (!entry) return;
 
-    delete state.cart[productId];
+    delete state.cart[key];
     saveCart();
     renderCart();
-    showToast(`«${product.name}» удалён из корзины`);
+    showToast(`«${entry.product.name}» удалён из корзины`);
+  }
+
+  /* Текстовая строка с весом и ценой для позиции корзины */
+  function cartItemMeta(item) {
+    const { product, grams, quantity } = item;
+
+    if (product.unit === "weight") {
+      const totalGrams = grams * quantity;
+      const suffix = quantity > 1 ? ` · всего ${formatGrams(totalGrams)}` : "";
+
+      return `${formatGrams(grams)} · ${formatPrice(product.pricePer100g)} / 100 г${suffix}`;
+    }
+
+    return product.weight;
   }
 
   function renderCart() {
@@ -490,12 +701,16 @@
 
     if (items.length === 0) {
       els.cartItems.innerHTML = "";
+      updateQrPanel();
       return;
     }
 
     // Список товаров
     els.cartItems.innerHTML = items
-      .map(({ product, quantity, lineTotal }) => `
+      .map((item) => {
+        const { key, product, quantity, lineTotal } = item;
+
+        return `
         <li class="cart-item">
           <img
             class="cart-item-img"
@@ -510,13 +725,13 @@
             <div class="cart-item-top">
               <div>
                 <h3 class="cart-item-name">${product.name}</h3>
-                <p class="cart-item-weight">${product.weight}</p>
+                <p class="cart-item-weight">${cartItemMeta(item)}</p>
               </div>
               <button
                 class="cart-remove"
                 type="button"
                 data-action="remove"
-                data-id="${product.id}"
+                data-key="${key}"
                 aria-label="Удалить «${product.name}» из корзины"
               >
                 <svg viewBox="0 0 24 24" width="17" height="17" fill="none" aria-hidden="true">
@@ -531,7 +746,7 @@
                   class="qty-btn"
                   type="button"
                   data-action="decrease"
-                  data-id="${product.id}"
+                  data-key="${key}"
                   aria-label="Уменьшить количество «${product.name}»"
                 >−</button>
                 <span class="qty-value" aria-live="polite">${quantity}</span>
@@ -539,7 +754,7 @@
                   class="qty-btn"
                   type="button"
                   data-action="increase"
-                  data-id="${product.id}"
+                  data-key="${key}"
                   aria-label="Увеличить количество «${product.name}»"
                   ${quantity >= 99 ? "disabled" : ""}
                 >+</button>
@@ -549,7 +764,8 @@
             </div>
           </div>
         </li>
-      `)
+      `;
+      })
       .join("");
 
     // Прогресс бесплатной доставки
@@ -572,6 +788,82 @@
       ? "Бесплатно"
       : formatPrice(totals.delivery);
     els.summaryTotal.textContent = formatPrice(totals.total);
+
+    updateQrPanel();
+  }
+
+  /* =========================================================
+     ОПЛАТА ПО QR-КОДУ
+     ========================================================= */
+  function isQrPaymentSelected() {
+    const checked = els.checkoutForm.querySelector('input[name="payment"]:checked');
+    return Boolean(checked && checked.value === "qr");
+  }
+
+  function paymentQrPayload(total) {
+    const fallback = "https://mazitov5atbip-source.github.io/espresso-landing/";
+    const source = CONFIG.paymentQrData || fallback;
+
+    return source.replace("{amount}", String(total));
+  }
+
+  function renderQrCode() {
+    if (!els.qrCode) return;
+
+    const totals = getCartTotals();
+    const payload = paymentQrPayload(totals.total);
+
+    // Если владелец положил готовую картинку QR от банка — показываем её
+    if (CONFIG.paymentQrImage) {
+      els.qrCode.innerHTML = `
+        <img
+          src="${CONFIG.paymentQrImage}"
+          alt="QR-код для оплаты заказа"
+          width="220"
+          height="220"
+          loading="lazy"
+        >
+      `;
+      return;
+    }
+
+    if (typeof qrcode !== "function") {
+      els.qrCode.textContent = "QR-код недоступен";
+      return;
+    }
+
+    if (qrCache.key === payload && qrCache.node) {
+      els.qrCode.replaceChildren(qrCache.node);
+      return;
+    }
+
+    const qr = qrcode(0, "M");
+    qr.addData(payload);
+    qr.make();
+
+    els.qrCode.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 1, scalable: true });
+    qrCache = { key: payload, node: els.qrCode.firstElementChild };
+  }
+
+  function updateQrPanel() {
+    if (!els.qrPanel) return;
+
+    const totals = getCartTotals();
+    const active = isQrPaymentSelected();
+
+    els.qrPanel.hidden = !active;
+
+    if (els.qrAmount) {
+      els.qrAmount.textContent = formatPrice(totals.total);
+    }
+
+    if (els.qrHint) {
+      els.qrHint.hidden = !(CONFIG.paymentQrDemo && !CONFIG.paymentQrImage);
+    }
+
+    if (active) {
+      renderQrCode();
+    }
   }
 
   /* =========================================================
@@ -706,7 +998,7 @@
     const phoneCharactersAreValid = /^[+\d\s()-]+$/.test(values.phone);
 
     if (!phoneCharactersAreValid || phoneDigits.length < 10 || phoneDigits.length > 15) {
-      setFieldError("phone", "Введите телефон, например +7 999 000-00-00.");
+      setFieldError("phone", "Введите телефон, например +7 996 582-21-64.");
       if (!firstInvalidInput) firstInvalidInput = phoneInput;
     }
 
@@ -733,9 +1025,20 @@
     const items = getCartItems();
     const totals = getCartTotals();
 
-    const itemLines = items.map(({ product, quantity, lineTotal }) => (
-      `• ${product.name} — ${quantity} × ${formatPrice(product.price)} = ${formatPrice(lineTotal)}`
-    ));
+    const itemLines = items.map((item) => {
+      const { product, quantity, grams, lineTotal } = item;
+
+      if (product.unit === "weight") {
+        const totalGrams = grams * quantity;
+        const quantityPart = quantity > 1
+          ? `${formatGrams(grams)} × ${quantity} = ${formatGrams(totalGrams)}`
+          : formatGrams(grams);
+
+        return `• ${product.name} — ${quantityPart} · ${formatPrice(product.pricePer100g)}/100 г = ${formatPrice(lineTotal)}`;
+      }
+
+      return `• ${product.name} — ${quantity} × ${formatPrice(product.price)} = ${formatPrice(lineTotal)}`;
+    });
 
     return [
       "Здравствуйте! Хочу оформить заказ в «Эспресс».",
@@ -749,10 +1052,50 @@
       `Имя: ${orderData.name}`,
       `Телефон: ${orderData.phone}`,
       `Адрес: ${orderData.address}`,
-      `Оплата: ${orderData.payment}`,
+      `Оплата: ${PAYMENT_LABELS[orderData.payment] || orderData.payment}`,
       "",
       "Подтвердите, пожалуйста, заказ и время доставки."
     ].join("\n");
+  }
+
+  function openExternal(url) {
+    // Клик по ссылке в рамках пользовательского действия надёжнее, чем window.open.
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  function fallbackCopy(text) {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.top = "-1000px";
+    area.style.opacity = "0";
+
+    document.body.appendChild(area);
+    area.select();
+
+    try {
+      document.execCommand("copy");
+    } catch (error) {
+      // Игнорируем: ниже покажем пользователю подсказку.
+    }
+
+    area.remove();
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      return;
+    }
+
+    fallbackCopy(text);
   }
 
   function submitOrder(channel) {
@@ -767,24 +1110,22 @@
     const message = buildOrderMessage(orderData);
     const encodedMessage = encodeURIComponent(message);
 
-    const url = channel === "telegram"
-      ? `https://t.me/${CONFIG.telegramUsername}?text=${encodedMessage}`
-      : `https://wa.me/${CONFIG.whatsappPhone}?text=${encodedMessage}`;
+    // MAX не поддерживает подстановку текста в чат, поэтому копируем заказ
+    if (channel === "max") {
+      copyToClipboard(message);
+      openExternal(CONFIG.maxLink);
+      showToast("Заказ скопирован — вставьте его в чат MAX.");
+      return;
+    }
 
-    // Клик по ссылке в рамках пользовательского действия надёжнее, чем window.open.
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    if (channel === "telegram") {
+      openExternal(`https://t.me/${CONFIG.telegramUsername}?text=${encodedMessage}`);
+      showToast("Открываем Telegram. Отправьте готовое сообщение.");
+      return;
+    }
 
-    showToast(
-      channel === "telegram"
-        ? "Открываем Telegram. Отправьте готовое сообщение."
-        : "Открываем WhatsApp. Отправьте готовое сообщение."
-    );
+    openExternal(`https://wa.me/${CONFIG.whatsappPhone}?text=${encodedMessage}`);
+    showToast("Открываем WhatsApp. Отправьте готовое сообщение.");
   }
 
   /* =========================================================
@@ -824,23 +1165,74 @@
       setActiveCategory(tabs[nextIndex].dataset.category, true);
     });
 
-    // Добавление товара из каталога
+    // Каталог: добавление в корзину и выбор веса
     els.grid.addEventListener("click", (event) => {
+      const stepButton = event.target.closest("[data-weight-step]");
+
+      if (stepButton) {
+        stepWeight(stepButton.dataset.id, Number(stepButton.dataset.weightStep));
+        return;
+      }
+
       const button = event.target.closest("[data-add-to-cart]");
       if (!button) return;
-      addToCart(button.dataset.addToCart, button);
+
+      const productId = button.dataset.addToCart;
+      const product = productById.get(productId);
+
+      if (!product) return;
+
+      if (product.unit === "weight") {
+        const input = els.grid.querySelector(`[data-weight-input="${productId}"]`);
+        const grams = input ? readWeight(input) : null;
+
+        if (!grams || grams < product.minWeight || grams > product.maxWeight) {
+          showToast(`Укажите вес от ${product.minWeight} до ${product.maxWeight} г.`);
+          if (input) {
+            input.focus({ preventScroll: false });
+            input.select();
+          }
+          return;
+        }
+
+        addToCart(productId, grams, button);
+        return;
+      }
+
+      addToCart(productId, 0, button);
     });
+
+    // Пересчёт цены при вводе веса
+    els.grid.addEventListener("input", (event) => {
+      const input = event.target.closest("[data-weight-input]");
+      if (!input) return;
+      updateWeightTotal(input.dataset.weightInput);
+    });
+
+    // Приводим вес в допустимые границы, когда поле теряет фокус
+    els.grid.addEventListener("blur", (event) => {
+      const input = event.target.closest("[data-weight-input]");
+      if (!input) return;
+
+      const product = productById.get(input.dataset.weightInput);
+      if (!product) return;
+
+      const grams = readWeight(input);
+
+      input.value = String(grams ? clampWeight(grams, product) : product.defaultWeight);
+      updateWeightTotal(product.id);
+    }, true);
 
     // Управление количеством и удаление в корзине
     els.cartItems.addEventListener("click", (event) => {
       const button = event.target.closest("[data-action]");
       if (!button) return;
 
-      const { action, id } = button.dataset;
+      const { action, key } = button.dataset;
 
-      if (action === "increase") changeQuantity(id, 1);
-      if (action === "decrease") changeQuantity(id, -1);
-      if (action === "remove") removeFromCart(id);
+      if (action === "increase") changeQuantity(key, 1);
+      if (action === "decrease") changeQuantity(key, -1);
+      if (action === "remove") removeFromCart(key);
     });
 
     // Открытие / закрытие корзины
@@ -870,13 +1262,20 @@
       }
     });
 
-    els.checkoutForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      submitOrder("whatsapp");
+    els.checkoutForm.addEventListener("change", (event) => {
+      if (event.target.name === "payment") {
+        updateQrPanel();
+      }
     });
 
-    els.telegramSubmit.addEventListener("click", () => {
-      submitOrder("telegram");
+    els.checkoutForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitOrder("max");
+    });
+
+    // Дополнительные каналы отправки заказа
+    document.querySelectorAll("[data-submit-channel]").forEach((button) => {
+      button.addEventListener("click", () => submitOrder(button.dataset.submitChannel));
     });
 
     // Текущий год в подвале
@@ -895,6 +1294,7 @@
     renderCart();
     setupFormAccessibility();
     bindEvents();
+    updateQrPanel();
   }
 
   init();
