@@ -967,6 +967,16 @@ p {
   white-space: nowrap;
 }
 
+/* Подпись «за 100 г» у весовых товаров */
+.product-price small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
 .add-btn {
   display: inline-flex;
   align-items: center;
@@ -1001,6 +1011,108 @@ p {
 
 .add-btn.is-added {
   background: var(--olive);
+}
+
+/* ---------- Весовой товар ---------- */
+.menu-hint {
+  grid-column: 1 / -1;
+  margin: 0 0 2px;
+  padding: 14px 16px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: rgba(102, 115, 75, 0.06);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.weight-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.weight-stepper {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.weight-stepper:focus-within {
+  border-color: var(--olive);
+  box-shadow: 0 0 0 3px rgba(102, 115, 75, 0.14);
+}
+
+.weight-btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.weight-btn:hover {
+  background: rgba(51, 33, 23, 0.07);
+}
+
+.weight-input {
+  width: 54px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.weight-input:focus {
+  outline: none;
+}
+
+.weight-input::-webkit-outer-spin-button,
+.weight-input::-webkit-inner-spin-button {
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.weight-unit {
+  margin-right: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.weight-total {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.weight-hint {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .menu-note {
@@ -1671,6 +1783,11 @@ p {
   gap: 8px;
 }
 
+/* Третий способ оплаты занимает всю ширину */
+.payment-option--qr {
+  grid-column: 1 / -1;
+}
+
 .payment-option {
   position: relative;
   display: flex;
@@ -1734,6 +1851,80 @@ p {
   outline-offset: 3px;
 }
 
+/* ---------- Оплата по QR-коду ---------- */
+.qr-panel {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  text-align: center;
+}
+
+.qr-panel[hidden] {
+  display: none;
+}
+
+.qr-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.qr-panel-title {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.qr-panel-amount {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.qr-code {
+  display: grid;
+  place-items: center;
+  width: 190px;
+  height: 190px;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+}
+
+.qr-code svg,
+.qr-code img {
+  width: 100%;
+  height: 100%;
+}
+
+.qr-panel-text {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.qr-panel-hint {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(217, 164, 93, 0.18);
+  color: #8a5a1e;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.qr-panel-hint code {
+  font-size: 10px;
+  font-weight: 700;
+}
+
 .order-summary {
   display: grid;
   gap: 8px;
@@ -1775,14 +1966,19 @@ p {
   box-shadow: 0 15px 30px rgba(169, 79, 50, 0.3);
 }
 
-.telegram-submit {
+.checkout-channels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.channel-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  width: 100%;
-  min-height: 48px;
-  margin-top: 8px;
+  gap: 7px;
+  min-height: 46px;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   background: transparent;
@@ -1793,7 +1989,7 @@ p {
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.telegram-submit:hover {
+.channel-btn:hover {
   border-color: var(--coffee);
   background: rgba(51, 33, 23, 0.04);
 }
