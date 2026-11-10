@@ -29,6 +29,7 @@ espresso-landing/
 ├── script.js       # каталог, корзина, валидация, отправка заказа
 ├── qrcode.min.js   # генератор QR-кодов (библиотека qrcode-generator, MIT)
 ├── favicon.svg     # иконка сайта
+├── images/         # фотографии товаров в формате WebP
 └── README.md       # эта инструкция
 ```
 
@@ -184,7 +185,32 @@ paymentQrDemo: false
 
 ### Фотографии
 
-Сейчас используются фотографии с Unsplash по прямым ссылкам. Для реального бизнеса лучше заменить их на собственные: положите изображения в папку `images/` и укажите относительные пути, например `images/cake.jpg`. Так сайт будет выглядеть уникально и не зависеть от внешнего сервиса.
+Все фотографии уже лежат в папке `images/` в формате WebP и подключены относительными путями (`images/chocolate-cake.webp`). Сайт не зависит от внешних фотосервисов и загружается быстро.
+
+Чтобы заменить фото на своё:
+
+1. Подготовьте картинку шириной 900–1200 px.
+2. Сохраните её в `images/` под новым именем, например `images/my-cake.webp` (подойдёт и `.jpg`).
+3. Укажите путь в массиве `products` в `script.js` и в `index.html` (главный экран и блок «О нас»).
+
+Сейчас в папке:
+
+```text
+images/
+├── hero-cake.webp        # главный экран
+├── croissant.webp        # круассан с миндалём
+├── sourdough.webp        # хлеб на закваске и блок «О нас»
+├── chocolate-cake.webp
+├── cheesecake.webp
+├── tiramisu.webp
+├── pavlova.webp
+├── salmon-croissant.webp
+├── cinnamon-bun.webp
+├── greek-salad.webp
+├── quinoa-salad.webp
+├── caesar-salad.webp
+└── bruschetta.webp
+```
 
 ## 3. Бесплатная публикация
 
@@ -198,6 +224,7 @@ paymentQrDemo: false
    - `script.js`
    - `qrcode.min.js`
    - `favicon.svg`
+   - папку `images/` целиком
    - при желании `README.md`
 4. Откройте **Settings → Pages**.
 5. В блоке **Build and deployment** выберите:
@@ -254,6 +281,6 @@ Netlify также умеет автоматически обновлять са
 - чистый JavaScript (ES6+);
 - qrcode-generator (MIT) для QR-кодов;
 - Google Fonts;
-- Unsplash для демонстрационных фотографий.
+- фотографии Unsplash сохранены локально в `images/` (WebP).
 
 Без фреймворков, сборщиков и платных зависимостей — сайт можно загрузить на любой статический хостинг.
