@@ -1783,11 +1783,6 @@ p {
   gap: 8px;
 }
 
-/* Третий способ оплаты занимает всю ширину */
-.payment-option--qr {
-  grid-column: 1 / -1;
-}
-
 .payment-option {
   position: relative;
   display: flex;
